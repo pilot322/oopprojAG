@@ -2,11 +2,11 @@ package models.accounts;
 
 public abstract class BankAccount {
     protected String IBAN;
-    protected String ownerId;
+    protected int ownerId;
     protected double balance;
     protected double interestRate;
 
-    public BankAccount(String IBAN, String ownerId, double interestRate) {
+    public BankAccount(String IBAN, int ownerId, double interestRate) {
         this.IBAN = IBAN;
         this.ownerId = ownerId;
         this.interestRate = interestRate;
@@ -17,29 +17,29 @@ public abstract class BankAccount {
         return IBAN;
     }
 
-    public String getOwnerId() {
+    public int getOwnerId() {
         return ownerId;
     }
-
 
     public double getBalance() {
         return balance;
     }
 
-
     public double getInterestRate() {
         return interestRate;
     }
 
-    public boolean addToBalance(double amount){
-        if(amount < 0) return false;
-        
+    public boolean addToBalance(double amount) {
+        if (amount < 0)
+            return false;
+
         this.balance += amount;
         return true;
     }
 
-    public boolean removeFromBalance(double amount){
-        if(amount < 0 || this.balance - amount < 0) return false;
+    public boolean removeFromBalance(double amount) {
+        if (amount < 0 || this.balance - amount < 0)
+            return false;
         this.balance -= amount;
         return true;
     }

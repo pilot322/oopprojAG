@@ -5,7 +5,7 @@ import models.accounts.BankAccount;
 import system.BankSystem;
 
 public class Withdraw extends Transaction {
-    public Withdraw(String transactorId, String accountIBAN, String description, double amount, BankSystem system) {
+    public Withdraw(int transactorId, String accountIBAN, String description, double amount, BankSystem system) {
         super(transactorId, accountIBAN, description, amount, system);
     }
 
@@ -18,7 +18,7 @@ public class Withdraw extends Transaction {
         // // amount
 
         BankAccount b = systemRef.getAccountManager().findAccountByIBAN(accountIBAN);
-        
+
         // koitas ti soy epistrefei
         b.removeFromBalance(amount);
 
@@ -28,7 +28,8 @@ public class Withdraw extends Transaction {
         // xreiazesai to account statement manager
         AccountStatementManager accStmtManager = systemRef.getAccountStatementManager();
 
-        accStmtManager.addStatement(accountIBAN, transactorId, description, amount, b.getBalance(), "withdraw", accountIBAN);
+        accStmtManager.addStatement(accountIBAN, transactorId, description, amount, b.getBalance(), "withdraw",
+                accountIBAN);
 
         return true;
     }

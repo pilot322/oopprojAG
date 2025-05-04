@@ -40,8 +40,10 @@ public class UserManager extends Manager {
 
     }
 
-    private String generateUserId() {
-        throw new RuntimeException("Mynhma skasimatos");
+    private int generateUserId() {
+        // return 0;
+        // throw new RuntimeException("Mynhma skasimatos");
+        return nextId++;
     }
 
     public void register(String type, String username, String password, String legalName, String vat) {
@@ -53,17 +55,17 @@ public class UserManager extends Manager {
 
         switch (type) {
             case "Admin":
-                Admin newUser = new Admin("", legalName, username, password);
-                usersMap.put(0, newUser);
+                Admin newUser = new Admin(generateUserId(), legalName, username, password);
+                usersMap.put(newUser.getId(), newUser);
                 break;
             case "Individual":
-                Individual individual = new Individual("", legalName, username, password, vat);
-                usersMap.put(0, individual);
+                Individual individual = new Individual(generateUserId(), legalName, username, password, vat);
+                usersMap.put(individual.getId(), individual);
                 break;
 
             case "Company":
-                Company company = new Company("", legalName, username, password, vat);
-                usersMap.put(0, company);
+                Company company = new Company(generateUserId(), legalName, username, password, vat);
+                usersMap.put(company.getId(), company);
                 break;
             default:
                 throw new RuntimeException("Account type not supported.");
@@ -80,13 +82,22 @@ public class UserManager extends Manager {
         }
     }
 
-    // TODO
-    public User findUserById(String userId) {
-        throw new RuntimeException("TODO");
+    // epistrefei null an den yparxei to user
+    public User findUserById(int userId) {
+        User user = usersMap.get(userId);
+        return user;
     }
 
-    // TODO
-    public String getUserType(String userId) {
-        throw new RuntimeException("TODO");
+    // epistrefei "admin", "individual" h "company"
+    public String getUserType(int userId) {
+        User user = findUserById(userId);
+
+        if (user instanceof Admin) {
+            return "Admin";
+        } else if (user instanceof Individual) {
+            return "Individual";
+        } else {
+            return "Company";
+        }
     }
 }

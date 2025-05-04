@@ -6,7 +6,7 @@ public class AccountStatement {
     private final int id;
     private final String accountIBAN;
     private final LocalDateTime transactionTime;
-    private final String transactorId;
+    private final int transactorId;
     private final String description;
     private final String transactionType;
     private final double amount;
@@ -14,7 +14,7 @@ public class AccountStatement {
     private final String receiverIBAN;
 
     public AccountStatement(int id, String accountIBAN, LocalDateTime transactionTime,
-            String transactorId, String description, String transactionType,
+            int transactorId, String description, String transactionType,
             double amount, double balanceAfterTransaction,
             String receiverIBAN) {
         this.id = id;
@@ -40,7 +40,7 @@ public class AccountStatement {
         return transactionTime;
     }
 
-    public String getTransactorId() {
+    public int getTransactorId() {
         return transactorId;
     }
 

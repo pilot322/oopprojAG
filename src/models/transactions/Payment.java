@@ -5,7 +5,7 @@ import system.BankSystem;
 public class Payment extends TwoWay {
     private final String RF;
 
-    public Payment(String transactorId, String senderIBAN,
+    public Payment(int transactorId, String senderIBAN,
             String senderDescription,
             String RF, BankSystem systemRef) {
 

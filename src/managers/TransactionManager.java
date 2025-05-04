@@ -2,7 +2,7 @@ package managers;
 
 import system.BankSystem;
 
-public class TransactionManager extends Manager{
+public class TransactionManager extends Manager {
 
     public TransactionManager(BankSystem system) {
         super(system);
@@ -13,7 +13,8 @@ public class TransactionManager extends Manager{
      * 
      * @return true αν η ανάληψη ολοκληρώθηκε επιτυχώς
      */
-    public boolean withdraw(String accountIBAN, String transactorId,
+    public boolean withdraw(String accountIBAN,
+            int transactorId,
             String description, double amount) {
         throw new RuntimeException("TODO");
     }

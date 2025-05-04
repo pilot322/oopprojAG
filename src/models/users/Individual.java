@@ -2,7 +2,7 @@ package models.users;
 
 public class Individual extends Costumer {
 
-    public Individual(String id, String legalName, String userName, String password, String vatNumber) {
+    public Individual(int id, String legalName, String userName, String password, String vatNumber) {
         super(id, legalName, userName, password, vatNumber);
     }
 }

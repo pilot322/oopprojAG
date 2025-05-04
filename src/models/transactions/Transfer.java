@@ -3,7 +3,7 @@ package models.transactions;
 import system.BankSystem;
 
 public class Transfer extends TwoWay {
-        public Transfer(String transactorId, String senderIBAN,
+        public Transfer(int transactorId, String senderIBAN,
                         String senderDescription, double amount,
                         String receiverIBAN, String receiverDescription, BankSystem system) {
                 super(transactorId, senderIBAN, senderDescription, amount,

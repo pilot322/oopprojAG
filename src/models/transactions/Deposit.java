@@ -5,7 +5,7 @@ import models.accounts.BankAccount;
 import system.BankSystem;
 
 public class Deposit extends Transaction {
-    public Deposit(String transactorId, String accountIBAN, String description, double amount, BankSystem systemRef) {
+    public Deposit(int transactorId, String accountIBAN, String description, double amount, BankSystem systemRef) {
         super(transactorId, accountIBAN, description, amount, systemRef);
     }
 
@@ -17,6 +17,9 @@ public class Deposit extends Transaction {
         // 1. ayksanw to balance toy bank account sto opoio antistoixei to iban kata to
         // // amount
 
+        // TODO: elegxoi oti to bank account yparxei, oti to amount einai egkyro
+        // kai oti o transactor yparxei
+
         BankAccount b = systemRef.getAccountManager().findAccountByIBAN(accountIBAN);
         b.addToBalance(amount);
 
@@ -26,7 +29,8 @@ public class Deposit extends Transaction {
         // xreiazesai to account statement manager
         AccountStatementManager accStmtManager = systemRef.getAccountStatementManager();
 
-        accStmtManager.addStatement(accountIBAN, transactorId, description, amount, b.getBalance(), "deposit", accountIBAN);
+        accStmtManager.addStatement(accountIBAN, transactorId, description, amount, b.getBalance(), "deposit",
+                accountIBAN);
 
         return true;
     }

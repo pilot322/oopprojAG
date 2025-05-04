@@ -4,9 +4,8 @@ import java.time.LocalDateTime;
 
 import system.BankSystem;
 
-
 public abstract class Transaction {
-    protected final String transactorId;
+    protected final int transactorId;
     protected final String accountIBAN;
     protected final String description;
     protected final double amount;
@@ -14,7 +13,7 @@ public abstract class Transaction {
     protected boolean executed;
     protected BankSystem systemRef;
 
-    public Transaction(String transactorId, String accountIBAN, String description, double amount, BankSystem system) {
+    public Transaction(int transactorId, String accountIBAN, String description, double amount, BankSystem system) {
         this.transactorId = transactorId;
         this.accountIBAN = accountIBAN;
         this.description = description;
@@ -26,7 +25,7 @@ public abstract class Transaction {
 
     public abstract boolean execute();
 
-    public String getTransactorId() {
+    public int getTransactorId() {
         return transactorId;
     }
 

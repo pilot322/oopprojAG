@@ -1,12 +1,12 @@
 package models.users;
 
 public abstract class User {
-    private String id;
+    private int id;
     private String userName;
     private String password;
     private String legalName;
 
-    public User(String id, String legalName, String userName, String password) {
+    public User(int id, String legalName, String userName, String password) {
         this.id = id;
         this.legalName = legalName;
         this.userName = userName;
@@ -14,7 +14,7 @@ public abstract class User {
 
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 

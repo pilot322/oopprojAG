@@ -7,7 +7,7 @@ import java.util.List;
 import models.statements.AccountStatement;
 import system.BankSystem;
 
-public class AccountStatementManager extends Manager{
+public class AccountStatementManager extends Manager {
     private HashMap<String, List<AccountStatement>> statements;
 
     public AccountStatementManager(BankSystem system) {
@@ -16,7 +16,7 @@ public class AccountStatementManager extends Manager{
     }
 
     // Προσθήκη νέου statement
-    public boolean addStatement(String accountIBAN, String transactorId,
+    public boolean addStatement(String accountIBAN, int transactorId,
             String description, double amount,
             double balanceAfter, String type,
             String receiverIBAN) {
