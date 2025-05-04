@@ -5,7 +5,6 @@ import managers.AccountStatementManager;
 import managers.BillManager;
 import managers.TransactionManager;
 import managers.UserManager;
-import models.users.User;
 
 public class BankSystem {
     private AccountManager accountManager;
@@ -38,11 +37,5 @@ public class BankSystem {
     public UserManager getUserManager() {
         return userManager;
     }
-
-
-    public User register(String type, String username, String password, String legalName, String vat){
-        return userManager.register(type, username, password, legalName, vat);
-    }
-
 
 }
