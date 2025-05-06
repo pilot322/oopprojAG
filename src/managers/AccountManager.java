@@ -99,7 +99,7 @@ public class AccountManager extends Manager {
         return null;
     }
 
-    boolean isOwnerOfBankAccount(BankAccount b, int ownerId) {
+    public boolean isOwnerOfBankAccount(BankAccount b, int ownerId) {
         if (b.getOwnerId() == ownerId) {
             return true;
         }

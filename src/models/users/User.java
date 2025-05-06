@@ -26,4 +26,8 @@ public abstract class User {
         return password;
     }
 
+    public String getLegalName() {
+        return legalName;
+    }
+
 }
