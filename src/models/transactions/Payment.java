@@ -19,7 +19,7 @@ public class Payment extends TwoWay {
     }
 
     @Override
-    public boolean execute() {
+    public void execute() {
         throw new RuntimeException("TODO");
     }
 

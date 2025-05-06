@@ -11,7 +11,7 @@ public class Transfer extends TwoWay {
         }
 
         @Override
-        public boolean execute() {
+        public void execute() {
                 // AccountStatement senderStatement = new AccountStatement(
                 // accountIBAN,
                 // timestamp,
@@ -33,6 +33,5 @@ public class Transfer extends TwoWay {
                 // statementManager.addStatement(senderStatement);
                 // statementManager.addStatement(receiverStatement);
                 executed = true;
-                return true;
         }
 }

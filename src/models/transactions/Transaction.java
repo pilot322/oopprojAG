@@ -23,7 +23,7 @@ public abstract class Transaction {
         this.systemRef = system;
     }
 
-    public abstract boolean execute();
+    public abstract void execute();
 
     public int getTransactorId() {
         return transactorId;

@@ -16,7 +16,7 @@ public class AccountStatementManager extends Manager {
     }
 
     // Προσθήκη νέου statement
-    public boolean addStatement(String accountIBAN, int transactorId,
+    public void addStatement(String accountIBAN, int transactorId,
             String description, double amount,
             double balanceAfter, String type,
             String receiverIBAN) {
