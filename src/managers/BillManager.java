@@ -39,5 +39,10 @@ public class BillManager extends Manager{
         throw new RuntimeException("TODO");
     }
 
+    public Bill getActiveBillByRf(String rF) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getActiveBillByRf'");
+    }
+
 
 }

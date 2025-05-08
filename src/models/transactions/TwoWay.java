@@ -1,11 +1,12 @@
 package models.transactions;
 
+import models.accounts.BankAccount;
 import system.BankSystem;
 
 public abstract class TwoWay extends Transaction {
 
-    protected final String receiverIBAN;
-    protected final String receiverDescription;
+    protected String receiverIBAN;
+    protected String receiverDescription;
 
     public TwoWay(int transactorId, String senderIBAN, String senderDescription, double amount, String receiverIBAN,
             String receiverDescription, BankSystem system) {
@@ -20,6 +21,24 @@ public abstract class TwoWay extends Transaction {
 
     public String getReceiverDescription() {
         return receiverDescription;
+    }
+
+    protected boolean isValid(){
+        if(!super.isValid()){
+            return false;
+        }
+
+        BankAccount receiver = systemRef.getAccountManager().findAccountByIBAN(receiverIBAN);
+
+        // Elegxos an receiver, sender kai transactor einai egkyroi
+        if (receiver == null) {
+                return false;
+        }
+        if (systemRef.getUserManager().findUserById(transactorId) == null) {
+                return false;
+        }
+
+        return true;
     }
 
 }

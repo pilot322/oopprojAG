@@ -10,16 +10,13 @@ public class Deposit extends Transaction {
     }
 
     @Override
-    public void execute() {
-        if (executed == true){
-            // throw exception
+    public boolean execute() {
+        if (!isValid()){
+            return false;
         }
 
         // 1. ayksanw to balance toy bank account sto opoio antistoixei to iban kata to
         // // amount
-
-        // TODO: elegxoi oti to bank account yparxei, oti to amount einai egkyro
-        // kai oti o transactor yparxei
 
         BankAccount b = systemRef.getAccountManager().findAccountByIBAN(accountIBAN);
         b.addToBalance(amount);
@@ -33,5 +30,6 @@ public class Deposit extends Transaction {
         accStmtManager.addStatement(accountIBAN, transactorId, description, amount, b.getBalance(), "deposit",
                 accountIBAN);
 
+        return true;
     }
 }

@@ -2,13 +2,14 @@ package models.transactions;
 
 import java.time.LocalDateTime;
 
+import models.accounts.BankAccount;
 import system.BankSystem;
 
 public abstract class Transaction {
     protected final int transactorId;
     protected final String accountIBAN;
     protected final String description;
-    protected final double amount;
+    protected  double amount;
     protected final LocalDateTime timestamp;
     protected boolean executed;
     protected BankSystem systemRef;
@@ -23,7 +24,30 @@ public abstract class Transaction {
         this.systemRef = system;
     }
 
-    public abstract void execute();
+    public abstract boolean execute();
+
+    protected boolean isValid(){
+        if(executed){
+            return false;
+        }
+
+        if (amount <= 0) {
+            return false;
+        }
+        
+        BankAccount b = systemRef.getAccountManager().findAccountByIBAN(accountIBAN);
+        if (b == null) {
+            return false;
+        }
+        if (systemRef.getUserManager().findUserById(transactorId) == null) {
+            return false;
+        }
+        if (b.getBalance() < amount && ! (this instanceof Deposit) ) {
+            return false;
+        }
+
+        return true;
+    }
 
     public int getTransactorId() {
         return transactorId;

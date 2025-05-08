@@ -20,7 +20,7 @@ public class AccountStatementManager extends Manager {
             String description, double amount,
             double balanceAfter, String type,
             String receiverIBAN) {
-        throw new RuntimeException("TODO");
+        // throw new RuntimeException("TODO");
     }
 
     // Λήψη όλων των statements για IBAN
