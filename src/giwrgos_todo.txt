@@ -1,1 +1,4 @@
 1. CLI -> main loop -> δειξε τις λεπτομεριες του account
+2. CLI -> individualMainLoop: overview, transactions: deposit, withdraw και transfer (εκτυπωσε todo για το payment)
+3. CLI -> companyMainLoop: να επιλεγει αυτοματα με βαση το business id το bank account (εκτος αν δεν υπαρχει, και αρα πρεπει να φτιαξει καινουριο),
+        + να εχει ο,τι εχει το menu του individual
