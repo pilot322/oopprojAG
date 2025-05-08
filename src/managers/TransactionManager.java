@@ -17,7 +17,7 @@ public class TransactionManager extends Manager {
      * 
      * @return true αν η ανάληψη ολοκληρώθηκε επιτυχώς
      */
-    public boolean withdraw(String accountIBAN, int transactorId, String description, double amount) {
+    public boolean withdraw(String accountIBAN, int transactorId, String description, double amount) throws Exception {
         if (amount <= 0) {
             return false;
         }
