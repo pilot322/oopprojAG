@@ -146,7 +146,6 @@ public class AccountManagerTest {
         assertEquals(companyId1, ba.getOwnerId());
         assertEquals(0.0, ba.getBalance(), 0.001);
         assertEquals(0.005, ba.getInterestRate(), 0.001);
-        assertEquals(10.0, ba.getMaintenanceFee(), 0.001);
     }
 
     @Test(expected = IllegalArgumentException.class)

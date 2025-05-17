@@ -20,7 +20,7 @@ public class UserManager extends Manager {
 
     public User login(String username, String password) {
         for (User user : usersMap.values()) {
-            if (user.getUserName().equals(username) && user.getPassword().equals(password)) {
+            if (user.getUserName().equalsIgnoreCase(username) && user.getPassword().equals(password)) {
                 return user;
             }
         }
@@ -31,7 +31,7 @@ public class UserManager extends Manager {
     private boolean isUsernameTaken(String username) {
 
         for (User user : usersMap.values()) {
-            if (user.getUserName().equals(username)) {
+            if (user.getUserName().equalsIgnoreCase(username)) {
                 return true;
             }
         }
@@ -51,6 +51,14 @@ public class UserManager extends Manager {
 
         if (isUsernameTaken(username)) {
             throw new RuntimeException("Username is taken");
+        }
+        if (type.equals("Admin") && vat != null) {
+            throw new IllegalArgumentException("Admins should not have a VAT.");
+        }
+        if ((type.equals("Individual") || type.equals("Company"))) {
+            if (vat == null || vat.length() != 9) {
+                throw new IllegalArgumentException("VAT must be exactly 9 digits.");
+            }
         }
 
         switch (type) {
@@ -91,7 +99,9 @@ public class UserManager extends Manager {
     // epistrefei "admin", "individual" h "company"
     public String getUserType(int userId) {
         User user = findUserById(userId);
-
+        if (user == null) {
+            throw new NullPointerException();
+        }
         if (user instanceof Admin) {
             return "Admin";
         } else if (user instanceof Individual) {

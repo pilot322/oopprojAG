@@ -16,7 +16,7 @@ public class Payment extends TwoWay {
 
     public Payment(int transactorId, String senderIBAN,
             String senderDescription,
-            String RF, BankSystem systemRef) {
+            String RF, BankSystem systemRef) throws Exception {
 
         super(transactorId,
                 senderIBAN,

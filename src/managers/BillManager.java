@@ -1,48 +1,87 @@
 package managers;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.RowFilter;
 
 import models.bills.Bill;
 import system.BankSystem;
 
-public class BillManager extends Manager{
+public class BillManager extends Manager {
+    private List<Bill> bills = new ArrayList<>();
+
     public BillManager(BankSystem system) {
         super(system);
     }
 
     public void addBill(Bill bill) {
-        throw new RuntimeException("TODO");
+        bills.add(bill);
     }
 
-
     public Bill getBillById(int id) {
-        throw new RuntimeException("TODO");
+        for (Bill b : bills) {
+            if (b.getId() == id) {
+                return b;
+            }
+        }
+        return null;
     }
 
     public List<Bill> getBillsByRF(String RF) {
-        throw new RuntimeException("TODO");
+        List<Bill> result = new ArrayList<>();
+        for (Bill b : bills) {
+            if (b.getRF().equals(RF)) {
+                result.add(b);
+            }
+        }
+        return result;
     }
 
     public List<Bill> getActiveBillsForCustomer(int customerId) {
-        throw new RuntimeException("TODO");
+        List<Bill> result = new ArrayList<>();
+        for (Bill b : bills) {
+            if (b.getCustomerId() == customerId && b.isActive() && !b.isPaid()) {
+                result.add(b);
+            }
+        }
+        return result;
     }
 
     public List<Bill> getActiveBillsForBusiness(int businessId) {
-        throw new RuntimeException("TODO");
+        List<Bill> result = new ArrayList<>();
+        for (Bill b : bills) {
+            if (b.getBusinessId() == businessId && b.isActive() && !b.isPaid()) {
+                result.add(b);
+            }
+        }
+        return result;
     }
 
     public boolean payBill(int billId) {
-        throw new RuntimeException("TODO");
+        Bill b = getBillById(billId);
+        if (b != null && b.isActive() && !b.isPaid()) {
+            b.markAsPaid();
+            return true;
+        }
+        return false;
     }
 
     public void deactivateBillsWithRF(String RF) {
-        throw new RuntimeException("TODO");
+        for (Bill b : bills) {
+            if (b.getRF().equals(RF)) {
+                b.setActive(false);
+            }
+        }
     }
 
-    public Bill getActiveBillByRf(String rF) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getActiveBillByRf'");
+    public Bill getActiveBillByRf(String RF) {
+        for (Bill b : bills) {
+            if (b.getRF().equals(RF) && b.isActive() && !b.isPaid()) {
+                return b;
+            }
+        }
+        return null;
     }
-
 
 }

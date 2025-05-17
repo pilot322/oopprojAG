@@ -1,5 +1,6 @@
 package managers;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +21,14 @@ public class AccountStatementManager extends Manager {
             String description, double amount,
             double balanceAfter, String type,
             String receiverIBAN) {
+        List<AccountStatement> accountStatements = statements.getOrDefault(accountIBAN, new ArrayList<>());
+        int nextId = accountStatements.size();
+        LocalDateTime transactionTime = LocalDateTime.now();
+
+        AccountStatement statement = new AccountStatement(nextId, accountIBAN, transactionTime,
+                transactorId, description, type, amount, balanceAfter, receiverIBAN);
+        statements.putIfAbsent(accountIBAN, new ArrayList<>());
+        statements.get(accountIBAN).add(statement);
         // throw new RuntimeException("TODO");
     }
 

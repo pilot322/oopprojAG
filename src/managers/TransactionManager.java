@@ -21,8 +21,13 @@ public class TransactionManager extends Manager {
         if (amount <= 0) {
             return false;
         }
-        Withdraw w = new Withdraw(transactorId, accountIBAN, description, amount, systemRef);
-        return w.execute();
+        try {
+            Withdraw w = new Withdraw(transactorId, accountIBAN, description, amount, systemRef);
+            w.execute();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
 
         // throw new RuntimeException("TODO");
     }
@@ -37,8 +42,13 @@ public class TransactionManager extends Manager {
         if (amount <= 0) {
             return false;
         }
-        Deposit d = new Deposit(transactorId, accountIBAN, description, amount, systemRef);
-        return d.execute();
+        try {
+            Deposit d = new Deposit(transactorId, accountIBAN, description, amount, systemRef);
+            d.execute();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
         // throw new RuntimeException("TODO");
     }
 
@@ -56,9 +66,14 @@ public class TransactionManager extends Manager {
         if (senderIBAN.equals(receiverIBAN)) {
             return false;
         }
-        Transfer t = new Transfer(transactorId, senderIBAN, description, amount, receiverIBAN,
-                "Transfer to " + receiverIBAN, systemRef);
-        return t.execute();
+        try {
+            Transfer t = new Transfer(transactorId, senderIBAN, description, amount, receiverIBAN,
+                    "Transfer to " + receiverIBAN, systemRef);
+            t.execute();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
 
         // throw new RuntimeException("TODO");
     }
@@ -73,8 +88,13 @@ public class TransactionManager extends Manager {
         if (RF == null) {
             return false;
         }
-        Payment p = new Payment(transactorId, accountIBAN, description, RF, systemRef);
-        return p.execute();
+        try {
+            Payment p = new Payment(transactorId, accountIBAN, description, RF, systemRef);
+            p.execute();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
         // throw new RuntimeException("TODO");
     }
 }

@@ -45,18 +45,84 @@ public class AccountManager extends Manager {
         // stoxos: na dhmioyrgeitai ena kainoyrio personal account kai na mpainei sthn
         // lista
         // IBAN: COUNTRY CODE + 100/200 (100 gia individual) + TYXAIA 15 PSHFIA
+        if (systemRef.getUserManager().findUserById(ownerId) == null) {
+            throw new IllegalArgumentException("Owner with ID " + ownerId + " does not exist.");
+        }
+        String userType = systemRef.getUserManager().getUserType(ownerId);
+        if (!userType.equals("Individual")) {
+            throw new IllegalArgumentException("Only users of type 'Individual' can own a personal account.");
+        }
+        if (countryCode == null || countryCode.length() != 2) {
+            throw new IllegalArgumentException("Country code must exist and be exactly 2 characters.");
+        }
+        if (interestRate < 0) {
+            throw new IllegalArgumentException("Interest rate cannot be negative.");
+        }
+        if (secondaryOwnerIds == null) {
+            secondaryOwnerIds = new ArrayList<>(); // Dhmiourgoyme nea lista an h lista einai null
+        }
+        for (int id : secondaryOwnerIds) {
+            if (systemRef.getUserManager().findUserById(id) == null) {
+                throw new IllegalArgumentException("Secondary owner with ID " + id + " does not exist.");
+            }
+            if (!systemRef.getUserManager().getUserType(id).equals("Individual")) {
+                throw new IllegalArgumentException("Secondary owners must be of type 'Individual'.");
+            }
+        }
+        if (secondaryOwnerIds.contains(ownerId)) {
+            throw new IllegalArgumentException("The primary owner cannot also be a secondary owner.");
+        }
         String IBAN = generateIBAN(countryCode, "100");
         PersonalAccount ba = new PersonalAccount(IBAN, ownerId, interestRate, secondaryOwnerIds);
-
+        System.out.println("debug: " + ba.getIBAN());
+        if (!ba.getIBAN().startsWith(countryCode + "100")) {
+            throw new IllegalArgumentException("IBAN should start with " + countryCode + "100 for personal.");
+        }
+        if (ba.getIBAN().length() != 20) {
+            throw new IllegalArgumentException("IBAN total length should be 20.");
+        }
         bankAccountList.add(ba);
 
     }
 
-    public void createBusinessAccount(int ownerId, String countryCode, double interestRate) {
+    public void createBusinessAccount(int ownerId, String countryCode, double interestRate) throws Exception {
         // TODO: vres maintenance fee pws krokyptei
-        double maintenanceFee = 10;
+        if (systemRef.getUserManager().findUserById(ownerId) == null) {
+            throw new IllegalArgumentException("Owner with ID " + ownerId + " does not exist.");
+        }
+        String userType = systemRef.getUserManager().getUserType(ownerId);
+        if (!userType.equals("Company")) {
+            throw new IllegalArgumentException("Only users of type 'Company' can own a business account.");
+        }
+        if (countryCode == null || countryCode.length() != 2) {
+            throw new IllegalArgumentException("Country code must exist and be exactly 2 characters.");
+        }
+        if (interestRate < 0) {
+            throw new IllegalArgumentException("Interest rate cannot be negative.");
+        }
+
+        // dokimh gia na paroyme yparxwn bank account. an yparxei, tha petaksoyme exception (afoy hdh yparxei, apagoreyetai na dhmioyrghthei kiallo)
+        
+        try {
+            BankAccount ba = findAccountByBusinessId(ownerId); // "kokkino" - den yparxei
+            // an den skasei h parapanw, exw provlhma
+            throw new IllegalStateException(); // "mple" - yparxei bank account
+        } catch(IllegalStateException e){
+            // an skasei, tote den yparxei thema (dld )
+            throw new IllegalStateException("Yparxei to bank account");
+        } catch(Exception e){
+            // ...
+        }
+
+        double maintenanceFee = interestRate * 1000;
         String IBAN = generateIBAN(countryCode, "200");
         BusinessAccount ba = new BusinessAccount(IBAN, ownerId, interestRate, maintenanceFee);
+        if (!ba.getIBAN().startsWith(countryCode + "200")) {
+            throw new IllegalArgumentException("IBAN should start with " + countryCode + "200 for business.");
+        }
+        if (ba.getIBAN().length() != 20) {
+            throw new IllegalArgumentException("Iban length should be 20.");
+        }
         bankAccountList.add(ba);
     }
 
@@ -70,33 +136,13 @@ public class AccountManager extends Manager {
         return null;
     }
 
-    public BusinessAccount findAccountByBusinessId(int businessId) {
-        // dedomena: bankAccountList, businessId
-        // stoxos: na epistrepsoyme to bank account to opoio exei san owner to user be
-        // id == businessId
-        // estw businessId = 3
-
-        // estw oti to bankAccountList einai keno
-
-        // return null;
-
-        // estw oti bankAccountList == { (ownerId = X), (ownerId =Y)}
-
-        // grammikh anazhthsh
-
-        // for (int i = 0; i < bankAccountList.size(); i++) {
-        // if (bankAccountList.get(i).getOwnerId() == businessId) {
-        // return (BusinessAccount) bankAccountList.get(i);
-        // }
-        // }
-
+    public BusinessAccount findAccountByBusinessId(int businessId) throws Exception {
         for (BankAccount b : bankAccountList) {
             if (isOwnerOfBankAccount(b, businessId)) {
                 return (BusinessAccount) b;
             }
         }
-
-        return null;
+        throw new IllegalArgumentException("Business account not found");
     }
 
     public boolean isOwnerOfBankAccount(BankAccount b, int ownerId) {
@@ -132,6 +178,9 @@ public class AccountManager extends Manager {
             if (isOwnerOfBankAccount(b, individualId)) {
                 personalAccounts.add((PersonalAccount) b);
             }
+        }
+        if (personalAccounts.isEmpty()) {
+            throw new IllegalArgumentException("Individual account not found.");
         }
 
         return personalAccounts;
