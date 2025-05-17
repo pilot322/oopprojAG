@@ -10,9 +10,9 @@ public class Deposit extends Transaction {
     }
 
     @Override
-    public boolean execute() {
-        if (!isValid()){
-            return false;
+    public void execute() throws Exception{
+        if (!isValid()) {
+            throw new IllegalArgumentException("Arguments invalid.");
         }
 
         // 1. ayksanw to balance toy bank account sto opoio antistoixei to iban kata to
@@ -29,7 +29,5 @@ public class Deposit extends Transaction {
 
         accStmtManager.addStatement(accountIBAN, transactorId, description, amount, b.getBalance(), "deposit",
                 accountIBAN);
-
-        return true;
     }
 }

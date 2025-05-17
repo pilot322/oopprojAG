@@ -45,6 +45,12 @@ public class AccountManager extends Manager {
         // stoxos: na dhmioyrgeitai ena kainoyrio personal account kai na mpainei sthn
         // lista
         // IBAN: COUNTRY CODE + 100/200 (100 gia individual) + TYXAIA 15 PSHFIA
+
+        // estw epitrepontai mono ta GR, AL kai EN
+        if(!"GR".equals(countryCode) && !"AL".equals(countryCode) && !"EN".equals(countryCode)){
+            throw new IllegalArgumentException("Illegal country code.");
+        }
+
         if (systemRef.getUserManager().findUserById(ownerId) == null) {
             throw new IllegalArgumentException("Owner with ID " + ownerId + " does not exist.");
         }

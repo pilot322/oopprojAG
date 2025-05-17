@@ -10,11 +10,11 @@ public class Withdraw extends Transaction {
     }
 
     @Override
-    public boolean execute() {
-        if (!isValid()){
-            return false;
+    public void execute() throws Exception {
+        if (!isValid()) {
+            throw new IllegalArgumentException();
         }
-        
+
         // 1. ayksanw to balance toy bank account sto opoio antistoixei to iban kata to
         // // amount
         BankAccount b = systemRef.getAccountManager().findAccountByIBAN(accountIBAN);
@@ -29,7 +29,5 @@ public class Withdraw extends Transaction {
 
         accStmtManager.addStatement(accountIBAN, transactorId, description, amount, b.getBalance(), "withdraw",
                 accountIBAN);
-
-        return true;
     }
 }

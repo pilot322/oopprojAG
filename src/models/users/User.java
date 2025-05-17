@@ -1,6 +1,8 @@
 package models.users;
 
-public abstract class User {
+import interfaces.Storable;
+
+public abstract class User implements Storable{
     private int id;
     private String userName;
     private String password;

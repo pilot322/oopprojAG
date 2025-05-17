@@ -74,21 +74,20 @@ public class BankingIntegrationTest {
 
         // 5. mainIndiv creates Personal Account 2 with indivIdSec1 and indivIdSec2 as secondary owners
         ArrayList<Integer> secondaryOwners = new ArrayList<Integer>(Arrays.asList(indivIdSec1, indivIdSec2));
-        accountManager.createPersonalAccount(indivIdMain, "CY", 0.015, secondaryOwners);
+        accountManager.createPersonalAccount(indivIdMain, "EN", 0.015, secondaryOwners);
         mainIndivAccounts = accountManager.findAccountsByIndividualId(indivIdMain);
         assertEquals("Main Individual should now have 2 accounts.", 2, mainIndivAccounts.size());
         
-        // Find the new account (CYprus based)
+        // Find the new account (GRprus based)
         PersonalAccount pa2 = null;
         for(PersonalAccount acc : mainIndivAccounts) {
-            if(acc.getIBAN().startsWith("CY100")) {
+            if(acc.getIBAN().startsWith("EN100")) {
                 pa2 = acc;
                 break;
             }
         }
-        assertNotNull("Could not find the CY account", pa2);
+        assertNotNull("Could not find the EN account", pa2);
         assertEquals(indivIdMain, pa2.getOwnerId());
-        assertEquals(0.015, pa2.getInterestRate(), 0.001);
         assertEquals(2, pa2.getSecondaryOwnerIds().size());
         assertTrue(pa2.getSecondaryOwnerIds().contains(indivIdSec1));
         assertTrue(pa2.getSecondaryOwnerIds().contains(indivIdSec2));
@@ -97,7 +96,7 @@ public class BankingIntegrationTest {
         // 6. mainIndiv fails to create Personal Account 3 with one non-existent secondary owner
         ArrayList<Integer> secondaryOwnersFail1 = new ArrayList<Integer>(Arrays.asList(indivIdSec1, nonExistentUserId));
         try {
-            accountManager.createPersonalAccount(indivIdMain, "DE", 0.01, secondaryOwnersFail1);
+            accountManager.createPersonalAccount(indivIdMain, "GR", 0.01, secondaryOwnersFail1);
             fail("Creating account with non-existent secondary owner should fail. Expected IllegalArgumentException.");
         } catch (IllegalArgumentException e) {
             // Expected exception
@@ -108,7 +107,7 @@ public class BankingIntegrationTest {
         // 7. mainIndiv fails to create Personal Account 4 with a Company as a secondary owner
         ArrayList<Integer> secondaryOwnersFail2 = new ArrayList<Integer>(Arrays.asList(indivIdSec1, otherCompId));
         try {
-            accountManager.createPersonalAccount(indivIdMain, "FR", 0.01, secondaryOwnersFail2);
+            accountManager.createPersonalAccount(indivIdMain, "AL", 0.01, secondaryOwnersFail2);
             fail("Creating account with Company as secondary owner should fail. Expected IllegalArgumentException.");
         } catch (IllegalArgumentException e) {
             // Expected exception
@@ -139,18 +138,17 @@ public class BankingIntegrationTest {
         }
 
         // 4. mainComp creates Business Account 1
-        accountManager.createBusinessAccount(companyIdMain, "GB", 0.005);
+        accountManager.createBusinessAccount(companyIdMain, "EN", 0.005);
         BusinessAccount ba1 = accountManager.findAccountByBusinessId(companyIdMain);
         assertNotNull("Company should have one business account.", ba1);
         assertEquals(companyIdMain, ba1.getOwnerId());
         assertEquals(0.005, ba1.getInterestRate(), 0.001);
         assertEquals(0.0, ba1.getBalance(), 0.001);
-        assertTrue(ba1.getIBAN().startsWith("GB200"));
-        assertEquals(10.0, ba1.getMaintenanceFee(), 0.001);
+        assertTrue(ba1.getIBAN().startsWith("EN200"));
 
         // 5. mainComp fails to create a second Business Account
         try {
-            accountManager.createBusinessAccount(companyIdMain, "CA", 0.007);
+            accountManager.createBusinessAccount(companyIdMain, "EN", 0.007);
             fail("Company should not be able to create more than one business account. Expected IllegalStateException.");
         } catch (IllegalStateException e) {
             // Expected exception

@@ -3,13 +3,14 @@ package models.transactions;
 import java.time.LocalDateTime;
 
 import models.accounts.BankAccount;
+import models.users.Admin;
 import system.BankSystem;
 
 public abstract class Transaction {
     protected final int transactorId;
     protected final String accountIBAN;
     protected final String description;
-    protected  double amount;
+    protected double amount;
     protected final LocalDateTime timestamp;
     protected boolean executed;
     protected BankSystem systemRef;
@@ -24,26 +25,32 @@ public abstract class Transaction {
         this.systemRef = system;
     }
 
-    public abstract boolean execute();
+    public abstract void execute() throws Exception;
 
-    protected boolean isValid(){
-        if(executed){
+    protected boolean isValid() {
+        if (executed) {
             return false;
         }
 
         if (amount <= 0) {
             return false;
         }
+
+
         
         BankAccount b = systemRef.getAccountManager().findAccountByIBAN(accountIBAN);
+        // if(/* an to transactor id den yparxei sta id twn katoxwn toy trapezikoy logariasmoy */){
         if (b == null) {
+            return false;
+        }
+        if(!systemRef.getAccountManager().isOwnerOfBankAccount(b, transactorId) && !(systemRef.getUserManager().findUserById(transactorId) instanceof Admin)){
             return false;
         }
         if (systemRef.getUserManager().findUserById(transactorId) == null) {
             return false;
         }
-        if (b.getBalance() < amount && ! (this instanceof Deposit) ) {
-            return false;
+        if (b.getBalance() < amount && !(this instanceof Deposit)) {
+            throw new IllegalStateException();
         }
 
         return true;

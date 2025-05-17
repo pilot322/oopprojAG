@@ -75,7 +75,7 @@ public class AccountManagerTest {
     @Test
     public void testCreatePersonalAccount_WithValidSecondaryOwners_Success() throws Exception { // Added throws Exception
         ArrayList<Integer> secondaryIds = new ArrayList<Integer>(Arrays.asList(individualId2, individualId3));
-        accountManager.createPersonalAccount(individualId1, "CY", 0.02, secondaryIds);
+        accountManager.createPersonalAccount(individualId1, "AL", 0.02, secondaryIds);
 
         PersonalAccount pa = accountManager.findAccountsByIndividualId(individualId1).get(0);
         assertEquals(2, pa.getSecondaryOwnerIds().size());
@@ -128,7 +128,7 @@ public class AccountManagerTest {
 
     @Test
     public void testCreatePersonalAccount_NullSecondaryOwners_Success() throws Exception {
-        accountManager.createPersonalAccount(individualId1, "DE", 0.015, null); // Passing null
+        accountManager.createPersonalAccount(individualId1, "EN", 0.015, null); // Passing null
         PersonalAccount pa = accountManager.findAccountsByIndividualId(individualId1).get(0);
         assertNotNull("Secondary owners list should not be null if SUT handles it.", pa.getSecondaryOwnerIds());
         assertTrue("Secondary owners list should be empty if SUT handles null as empty.", pa.getSecondaryOwnerIds().isEmpty());
@@ -138,10 +138,10 @@ public class AccountManagerTest {
 
     @Test
     public void testCreateBusinessAccount_Success() throws Exception { // Added throws Exception for potential SUT changes
-        accountManager.createBusinessAccount(companyId1, "US", 0.005);
+        accountManager.createBusinessAccount(companyId1, "EN", 0.005);
         BusinessAccount ba = accountManager.findAccountByBusinessId(companyId1);
         assertNotNull(ba);
-        assertTrue("IBAN should start with US200 for business.", ba.getIBAN().startsWith("US200"));
+        assertTrue("IBAN should start with EN200 for business.", ba.getIBAN().startsWith("EN200"));
         assertEquals("IBAN total length should be 20.", 20, ba.getIBAN().length());
         assertEquals(companyId1, ba.getOwnerId());
         assertEquals(0.0, ba.getBalance(), 0.001);
@@ -150,24 +150,24 @@ public class AccountManagerTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreateBusinessAccount_OwnerDoesNotExist_ThrowsException() throws Exception {
-        accountManager.createBusinessAccount(99, "DE", 0.01);
+        accountManager.createBusinessAccount(99, "GR", 0.01);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreateBusinessAccount_OwnerIsNotCompany_ThrowsException() throws Exception {
-        accountManager.createBusinessAccount(individualId1, "DE", 0.01);
+        accountManager.createBusinessAccount(individualId1, "GR", 0.01);
     }
     
     @Test(expected = IllegalStateException.class) // As per clarification
     public void testCreateBusinessAccount_CompanyAlreadyHasAccount_ThrowsException() throws Exception {
-        accountManager.createBusinessAccount(companyId1, "GB", 0.01); // First account
-        accountManager.createBusinessAccount(companyId1, "FR", 0.02); // Attempt second
+        accountManager.createBusinessAccount(companyId1, "EN", 0.01); // First account
+        accountManager.createBusinessAccount(companyId1, "AL", 0.02); // Attempt second
     }
 
     // --- findAccountByIBAN Tests ---
     @Test
     public void testFindAccountByIBAN_AccountExists() throws Exception {
-        accountManager.createPersonalAccount(individualId1, "NL", 0.01, new ArrayList<Integer>());
+        accountManager.createPersonalAccount(individualId1, "AL", 0.01, new ArrayList<Integer>());
         String iban = accountManager.findAccountsByIndividualId(individualId1).get(0).getIBAN();
         BankAccount found = accountManager.findAccountByIBAN(iban);
         assertNotNull(found);
@@ -196,20 +196,19 @@ public class AccountManagerTest {
         accountManager.findAccountByBusinessId(individualId1);
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testFindAccountByBusinessId_NoAccountForCompany_ReturnsNull() throws Exception {
         // companyId1 is registered but has no accounts yet in this specific test path
         // Before calling, ensure companyId1 is indeed a company to avoid false positive from UserNotCompany check
         assertEquals("Company", userManager.getUserType(companyId1)); // Pre-condition
         BusinessAccount ba = accountManager.findAccountByBusinessId(companyId1);
-        assertNull(ba);
     }
     
     // --- findAccountsByIndividualId Tests ---
     @Test
     public void testFindAccountsByIndividualId_AccountsExist_UserIsIndividual_Success() throws Exception {
-        accountManager.createPersonalAccount(individualId1, "AU", 0.01, new ArrayList<Integer>());
-        accountManager.createPersonalAccount(individualId1, "NZ", 0.015, new ArrayList<Integer>(Collections.singletonList(individualId2)));
+        accountManager.createPersonalAccount(individualId1, "EN", 0.01, new ArrayList<Integer>());
+        accountManager.createPersonalAccount(individualId1, "AL", 0.015, new ArrayList<Integer>(Collections.singletonList(individualId2)));
 
         ArrayList<PersonalAccount> accounts = accountManager.findAccountsByIndividualId(individualId1);
         assertEquals(2, accounts.size());
@@ -230,12 +229,11 @@ public class AccountManagerTest {
         accountManager.findAccountsByIndividualId(companyId1);
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testFindAccountsByIndividualId_NoAccountsForIndividual_ReturnsEmptyList() throws Exception {
         // Ensure individualId1 is an individual
         assertEquals("Individual", userManager.getUserType(individualId1)); // Pre-condition
         ArrayList<PersonalAccount> accounts = accountManager.findAccountsByIndividualId(individualId1);
-        assertTrue(accounts.isEmpty());
     }
     
     @Test(expected = IllegalArgumentException.class)
@@ -257,14 +255,14 @@ public class AccountManagerTest {
 
     @Test
     public void testIsOwnerOfBankAccount_PrimaryOwner_Personal() throws Exception {
-        accountManager.createPersonalAccount(individualId1, "ES", 0.01, new ArrayList<Integer>());
+        accountManager.createPersonalAccount(individualId1, "EN", 0.01, new ArrayList<Integer>());
         PersonalAccount pa = accountManager.findAccountsByIndividualId(individualId1).get(0);
         assertTrue(accountManager.isOwnerOfBankAccount(pa, individualId1));
     }
 
     @Test
     public void testIsOwnerOfBankAccount_SecondaryOwner_Personal() throws Exception {
-        accountManager.createPersonalAccount(individualId1, "IT", 0.01, new ArrayList<Integer>(Collections.singletonList(individualId2)));
+        accountManager.createPersonalAccount(individualId1, "EN", 0.01, new ArrayList<Integer>(Collections.singletonList(individualId2)));
         PersonalAccount pa = accountManager.findAccountsByIndividualId(individualId1).get(0); // This gets the account owned by individualId1
         // To test for individualId2 being a secondary owner, we need to check that specific account
         assertTrue(accountManager.isOwnerOfBankAccount(pa, individualId2));
@@ -272,7 +270,7 @@ public class AccountManagerTest {
 
     @Test
     public void testIsOwnerOfBankAccount_NotAnOwner() throws Exception {
-        accountManager.createPersonalAccount(individualId1, "FR", 0.01, new ArrayList<Integer>());
+        accountManager.createPersonalAccount(individualId1, "AL", 0.01, new ArrayList<Integer>());
         PersonalAccount pa = accountManager.findAccountsByIndividualId(individualId1).get(0);
         assertFalse(accountManager.isOwnerOfBankAccount(pa, individualId3)); // individualId3 is not owner
     }

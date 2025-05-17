@@ -168,7 +168,7 @@ public class UserManagerTest {
         assertEquals("User type should be Company.", "Company", userType);
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testGetUserType_UserNotFound() {
         // Based on current UserManager.getUserType, this would throw NullPointerException
         // if findUserById returns null.

@@ -38,16 +38,17 @@ public class Payment extends TwoWay {
     }
 
     @Override
-    public boolean execute() {
+    public void execute() throws Exception {
         if (!isValid()) {
-            return false;
+            throw new RuntimeException();
         }
 
         BankAccount senderAccount = systemRef.getAccountManager().findAccountByIBAN(accountIBAN);
         BankAccount receiverAccount = systemRef.getAccountManager().findAccountByIBAN(receiverIBAN);
-        // kanonika DEN xreiazetai o parakatw elegxos, afoy to receiverIBAN to phra apo ena Bill, kai ta bills kratane mono business bank account iban
+        // kanonika DEN xreiazetai o parakatw elegxos, afoy to receiverIBAN to phra apo
+        // ena Bill, kai ta bills kratane mono business bank account iban
         // if (!(receiverAccount instanceof BusinessAccount)) {
-        //     return false;
+        // return false;
         // }
 
         receiverAccount.addToBalance(amount);
@@ -60,7 +61,6 @@ public class Payment extends TwoWay {
         accStmtManager.addStatement(receiverIBAN, transactorId, receiverDescription, amount,
                 receiverAccount.getBalance(), "payment", accountIBAN);
         executed = true;
-        return true;
 
     }
 

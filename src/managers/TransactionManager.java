@@ -1,6 +1,9 @@
 package managers;
 
 import system.BankSystem;
+
+import java.util.concurrent.ExecutionException;
+
 import models.transactions.Deposit;
 import models.transactions.Payment;
 import models.transactions.Transfer;
@@ -17,17 +20,9 @@ public class TransactionManager extends Manager {
      * 
      * @return true αν η ανάληψη ολοκληρώθηκε επιτυχώς
      */
-    public boolean withdraw(String accountIBAN, int transactorId, String description, double amount) throws Exception {
-        if (amount <= 0) {
-            return false;
-        }
-        try {
-            Withdraw w = new Withdraw(transactorId, accountIBAN, description, amount, systemRef);
-            w.execute();
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+    public void withdraw(String accountIBAN, int transactorId, String description, double amount) throws Exception {
+        Withdraw w = new Withdraw(transactorId, accountIBAN, description, amount, systemRef);
+        w.execute();
 
         // throw new RuntimeException("TODO");
     }
@@ -37,19 +32,11 @@ public class TransactionManager extends Manager {
      * 
      * @return true αν η κατάθεση ολοκληρώθηκε επιτυχώς
      */
-    public boolean deposit(String accountIBAN, int transactorId,
-            String description, double amount) {
-        if (amount <= 0) {
-            return false;
-        }
-        try {
-            Deposit d = new Deposit(transactorId, accountIBAN, description, amount, systemRef);
-            d.execute();
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-        // throw new RuntimeException("TODO");
+    public void deposit(String accountIBAN, int transactorId,
+            String description, double amount) throws Exception {
+
+        Deposit d = new Deposit(transactorId, accountIBAN, description, amount, systemRef);
+        d.execute();
     }
 
     /**
@@ -57,25 +44,12 @@ public class TransactionManager extends Manager {
      * 
      * @return true αν η μεταφορά ολοκληρώθηκε επιτυχώς
      */
-    public boolean transfer(String senderIBAN, int transactorId,
+    public void transfer(String senderIBAN, int transactorId,
             String description, double amount,
-            String receiverIBAN) {
-        if (amount <= 0) {
-            return false;
-        }
-        if (senderIBAN.equals(receiverIBAN)) {
-            return false;
-        }
-        try {
+            String receiverIBAN) throws Exception {
             Transfer t = new Transfer(transactorId, senderIBAN, description, amount, receiverIBAN,
                     "Transfer to " + receiverIBAN, systemRef);
             t.execute();
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-
-        // throw new RuntimeException("TODO");
     }
 
     /**
@@ -83,18 +57,9 @@ public class TransactionManager extends Manager {
      * 
      * @return true αν η πληρωμή ολοκληρώθηκε επιτυχώς
      */
-    public boolean pay(String accountIBAN, int transactorId,
-            String description, String RF) {
-        if (RF == null) {
-            return false;
-        }
-        try {
+    public void pay(String accountIBAN, int transactorId,
+            String description, String RF) throws Exception {
             Payment p = new Payment(transactorId, accountIBAN, description, RF, systemRef);
             p.execute();
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-        // throw new RuntimeException("TODO");
     }
 }

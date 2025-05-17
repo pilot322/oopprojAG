@@ -13,7 +13,7 @@ public class Transfer extends TwoWay {
         }
 
         @Override
-        public boolean execute() {
+        public void execute() throws Exception{
                 // AccountStatement senderStatement = new AccountStatement(
                 // accountIBAN,
                 // timestamp,
@@ -34,9 +34,9 @@ public class Transfer extends TwoWay {
 
                 // statementManager.addStatement(senderStatement);
                 // statementManager.addStatement(receiverStatement);
-                if(!isValid()){
-                        return false;
-                } 
+                if (!isValid()) {
+                 throw new IllegalArgumentException();
+                }
 
                 BankAccount sender = systemRef.getAccountManager().findAccountByIBAN(accountIBAN);
                 BankAccount receiver = systemRef.getAccountManager().findAccountByIBAN(receiverIBAN);
@@ -56,6 +56,5 @@ public class Transfer extends TwoWay {
                                 receiverDescription + " <- " + description, amount, receiver.getBalance(),
                                 "transfer_in", accountIBAN);
 
-                return true;
         }
 }

@@ -56,7 +56,7 @@ public class UserManager extends Manager {
             throw new IllegalArgumentException("Admins should not have a VAT.");
         }
         if ((type.equals("Individual") || type.equals("Company"))) {
-            if (vat == null || vat.length() != 9) {
+            if (vat == null || vat.length() != 9 || !isDigit(vat)) {
                 throw new IllegalArgumentException("VAT must be exactly 9 digits.");
             }
         }
@@ -83,7 +83,7 @@ public class UserManager extends Manager {
 
     private boolean isDigit(String vat) {
         try {
-            int valid = Integer.parseInt(vat);
+            Integer.parseInt(vat);
             return true;
         } catch (Exception e) {
             return false;
@@ -100,7 +100,7 @@ public class UserManager extends Manager {
     public String getUserType(int userId) {
         User user = findUserById(userId);
         if (user == null) {
-            throw new NullPointerException();
+            throw new IllegalArgumentException();
         }
         if (user instanceof Admin) {
             return "Admin";

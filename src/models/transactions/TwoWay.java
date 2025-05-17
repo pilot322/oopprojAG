@@ -31,12 +31,14 @@ public abstract class TwoWay extends Transaction {
         BankAccount receiver = systemRef.getAccountManager().findAccountByIBAN(receiverIBAN);
 
         // Elegxos an receiver, sender kai transactor einai egkyroi
-        if (receiver == null) {
+        if (receiver == null || accountIBAN == null || accountIBAN.equals(receiverIBAN)) {
                 return false;
         }
         if (systemRef.getUserManager().findUserById(transactorId) == null) {
                 return false;
-        }
+        } 
+
+     
 
         return true;
     }

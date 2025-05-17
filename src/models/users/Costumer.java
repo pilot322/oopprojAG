@@ -1,6 +1,6 @@
 package models.users;
 
-public class Costumer extends User {
+public abstract class Costumer extends User {
     String VAT;
 
     public Costumer(int id, String legalName, String userName, String password, String VAT) {
@@ -11,4 +11,11 @@ public class Costumer extends User {
     public String getVAT() {
         return VAT;
     }
+
+    public String marshal(){
+        return null;
+    }
+    public void unmarshal(String data){
+
+    } 
 }
