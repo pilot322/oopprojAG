@@ -110,7 +110,7 @@ public class AccountManager extends Manager {
         // dokimh gia na paroyme yparxwn bank account. an yparxei, tha petaksoyme exception (afoy hdh yparxei, apagoreyetai na dhmioyrghthei kiallo)
         
         try {
-            BankAccount ba = findAccountByBusinessId(ownerId); // "kokkino" - den yparxei
+            findAccountByBusinessId(ownerId); // "kokkino" - den yparxei
             // an den skasei h parapanw, exw provlhma
             throw new IllegalStateException(); // "mple" - yparxei bank account
         } catch(IllegalStateException e){

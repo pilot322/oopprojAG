@@ -1,5 +1,6 @@
 package managers;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,17 +14,8 @@ public class BillManager extends Manager {
         super(system);
     }
 
-    public void addBill(Bill bill) {
-        bills.add(bill);
-    }
-
-    public Bill getBillById(int id) {
-        for (Bill b : bills) {
-            if (b.getId() == id) {
-                return b;
-            }
-        }
-        return null;
+    public void issueBill(int businessId, int customerId, double amount, LocalDateTime expireTime, String oldRF) throws Exception{
+        throw new RuntimeException("TODO!");
     }
 
     public List<Bill> getBillsByRF(String RF) {
@@ -56,13 +48,12 @@ public class BillManager extends Manager {
         return result;
     }
 
-    public boolean payBill(int billId) {
-        Bill b = getBillById(billId);
-        if (b != null && b.isActive() && !b.isPaid()) {
-            b.markAsPaid();
-            return true;
-        }
-        return false;
+    public void markBillAsPaid(String RF) {
+        throw new RuntimeException("TODO!");
+    }
+
+    public ArrayList<Bill> getBillsForBusinessCustomerPair(int customerId, int businessId){
+        throw new RuntimeException("TODO!");
     }
 
     public void deactivateBillsWithRF(String RF) {
