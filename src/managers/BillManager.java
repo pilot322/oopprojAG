@@ -31,7 +31,7 @@ public class BillManager extends Manager {
     public List<Bill> getActiveBillsForCustomer(int customerId) {
         List<Bill> result = new ArrayList<>();
         for (Bill b : bills) {
-            if (b.getCustomerId() == customerId && b.isActive() && !b.isPaid()) {
+            if (b.getCustomerId() == customerId && b.isActive()) {
                 result.add(b);
             }
         }
@@ -41,7 +41,7 @@ public class BillManager extends Manager {
     public List<Bill> getActiveBillsForBusiness(int businessId) {
         List<Bill> result = new ArrayList<>();
         for (Bill b : bills) {
-            if (b.getBusinessId() == businessId && b.isActive() && !b.isPaid()) {
+            if (b.getBusinessId() == businessId && b.isActive()) {
                 result.add(b);
             }
         }
@@ -66,7 +66,7 @@ public class BillManager extends Manager {
 
     public Bill getActiveBillByRf(String RF) {
         for (Bill b : bills) {
-            if (b.getRF().equals(RF) && b.isActive() && !b.isPaid()) {
+            if (b.getRF().equals(RF) && b.isActive()) {
                 return b;
             }
         }

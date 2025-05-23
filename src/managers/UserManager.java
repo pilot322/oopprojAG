@@ -1,12 +1,15 @@
 package managers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import models.users.Admin;
 import models.users.Company;
 import models.users.Individual;
 import models.users.User;
+import interfaces.Storable;
 import system.BankSystem;
 
 public class UserManager extends Manager {
@@ -109,5 +112,11 @@ public class UserManager extends Manager {
         } else {
             return "Company";
         }
+    }
+
+    public void saveAll(){
+        List<Storable> usersList = new ArrayList<>(usersMap.values());
+
+        writeListToFile("data/users/users.csv", usersList);
     }
 }

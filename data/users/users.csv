@@ -1,0 +1,2 @@
+type:Individual,id:0,legalName:aaa,userName:abcd,password:1234,vatNumber:123456789
+type:Individual,id:1,legalName:bbb,userName:dcba,password:1234,vatNumber:987654321

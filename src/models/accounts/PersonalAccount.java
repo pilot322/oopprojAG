@@ -17,4 +17,30 @@ public class PersonalAccount extends BankAccount {
         // mporei na thn allaksei
         // me afton ton tropo, ftiaxneis ena antigrafo
     }
+
+    @Override
+    public String marshal() {
+        String result = "type:PersonalAccount," + super.marshal();
+        if (!secondaryOwnerIds.isEmpty()) {
+            for (int id : secondaryOwnerIds) {
+                result += ",coOwner";
+                result += ":" + id;
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public void unmarshal(String data) {
+        super.unmarshal(data);
+        String[] parts = data.split(",");
+        this.secondaryOwnerIds = new ArrayList<>();
+        if (parts.length > 6 && parts[6].startsWith("coOwner")) {
+            String[] coOwners = parts[6].split(":");
+            for (int i = 1; i < coOwners.length; i++) {
+                secondaryOwnerIds.add(Integer.parseInt(coOwners[i]));
+            }
+        }
+    }
+
 }

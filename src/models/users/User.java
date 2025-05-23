@@ -2,11 +2,11 @@ package models.users;
 
 import interfaces.Storable;
 
-public abstract class User implements Storable{
-    private int id;
-    private String userName;
-    private String password;
-    private String legalName;
+public abstract class User implements Storable {
+    protected int id;
+    protected String userName;
+    protected String password;
+    protected String legalName;
 
     public User(int id, String legalName, String userName, String password) {
         this.id = id;

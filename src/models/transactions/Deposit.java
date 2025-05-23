@@ -28,6 +28,6 @@ public class Deposit extends Transaction {
         AccountStatementManager accStmtManager = systemRef.getAccountStatementManager();
 
         accStmtManager.addStatement(accountIBAN, transactorId, description, amount, b.getBalance(), "deposit",
-                accountIBAN);
+                null);
     }
 }

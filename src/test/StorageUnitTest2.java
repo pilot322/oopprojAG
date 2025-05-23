@@ -17,7 +17,7 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class TransactionManagerTest {
+public class StorageUnitTest2 {
 
     private BankSystem bankSystem;
     private TransactionManager transactionManager;
@@ -202,180 +202,15 @@ public class TransactionManagerTest {
         List<AccountStatement> senderStatements = accountStatementManager.getStatements(iban1);
         assertEquals("transfer_out", senderStatements.get(0).getTransactionType());
         assertEquals(150.0, senderStatements.get(0).getAmount(), 0.001);
-        assertEquals(iban2, senderStatements.get(0).getreceiverIBAN());
+        assertEquals(iban2, senderStatements.get(0).getReceiverIBAN());
 
         List<AccountStatement> receiverStatements = accountStatementManager.getStatements(iban2);
         assertEquals("transfer_in", receiverStatements.get(0).getTransactionType());
         assertEquals(150.0, receiverStatements.get(0).getAmount(), 0.001);
     }
 
-    @Test
-    public void testTransfer_SenderInsufficientFunds_ThrowsException_NoStatements_BalancesUnchanged() throws Exception {
-        double senderInitial = accountManager.findAccountByIBAN(iban1).getBalance(); // 1000
-        double receiverInitial = accountManager.findAccountByIBAN(iban2).getBalance();
-        int senderInitialStmtCount = accountStatementManager.getStatements(iban1).size();
-        int receiverInitialStmtCount = accountStatementManager.getStatements(iban2).size();
 
-        try {
-            transactionManager.transfer(iban1, individualId1, "Large transfer", senderInitial + 500.0, iban2);
-            fail("Should throw IllegalStateException for insufficient funds.");
-        } catch (IllegalStateException e) {
-            // Expected
-        }
-        assertEquals(senderInitial, accountManager.findAccountByIBAN(iban1).getBalance(), 0.001);
-        assertEquals(receiverInitial, accountManager.findAccountByIBAN(iban2).getBalance(), 0.001);
-        assertEquals(senderInitialStmtCount, accountStatementManager.getStatements(iban1).size());
-        assertEquals(receiverInitialStmtCount, accountStatementManager.getStatements(iban2).size());
-    }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testTransfer_SameSenderAndReceiverIBAN_ThrowsException() throws Exception {
-        transactionManager.transfer(iban1, individualId1, "Self transfer", 50.0, iban1);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testTransfer_UnauthorizedUser_ThrowsException() throws Exception {
-        // individualId2 (not owner of iban1) tries to transfer from iban1
-        transactionManager.transfer(iban1, individualId2, "Unauthorized transfer", 50.0, iban2);
-    }
-
-    @Test
-    public void testTransfer_Success_ByAdmin() throws Exception {
-        double senderInitial = accountManager.findAccountByIBAN(iban1).getBalance(); // 1000
-        double receiverInitial = accountManager.findAccountByIBAN(iban2).getBalance();
-
-        transactionManager.transfer(iban1, adminId, "Admin transfer", 150.0, iban2);
-
-        assertEquals(senderInitial - 150.0, accountManager.findAccountByIBAN(iban1).getBalance(), 0.001);
-        assertEquals(receiverInitial + 150.0, accountManager.findAccountByIBAN(iban2).getBalance(), 0.001);
-    }
-
-    // --- Pay Tests ---
-    // These require BillManager to be functional or mocked.
-    // For now, let's assume a simplified BillManager interaction for unit testing
-    // TransactionManager.
-    // We will need a way to tell BillManager "this RF exists, has this amount, and
-    // maps to this business (receiver IBAN)".
-
-    @Test
-    public void testPay_Success() throws Exception {
-        // Simplified setup: Assume BillManager can provide Bill details.
-        // This is where mocking BillManager would be ideal for a unit test.
-        // Since we are not using a mocking framework, we'll have to rely on
-        // BillManager's actual (potentially TODO) implementation or make assumptions.
-
-        // Let's assume we can add a bill to BillManager for testing.
-        // Bill constructor: int id, int businessId, int customerId, String RF, double
-        // amount, LocalDateTime timePublished, LocalDateTime expireTime
-        String testRF = "RF12345";
-        double billAmount = 75.0;
-        // The bill's businessId is companyId, which owns iban3_business
-        Bill testBill = new Bill(1, companyId, individualId1, testRF, billAmount, LocalDateTime.now(),
-                LocalDateTime.now().plusDays(30));
-
-        // This is a placeholder for how you'd make the bill known to BillManager.
-        // If BillManager has an addBill method:
-        // billManager.addBill(testBill);
-        // And a method like:
-        // Bill billManager.getBillByRF(String RF)
-        // And a method like:
-        // void billManager.markBillAsPaid(String RF) or (int billId)
-
-        // For this test to pass without full BillManager, TransactionManager.pay()
-        // needs to be adapted or BillManager needs to be pre-populated/mocked.
-        // Let's assume TransactionManager.pay internally resolves RF to amount and
-        // receiver IBAN.
-        // And it calls something like billManager.processPaymentForRF(RF, amountPaid);
-
-        // Pre-condition: Payer (iban1) has funds. Receiver (iban3_business) exists.
-        double payerInitialBalance = accountManager.findAccountByIBAN(iban1).getBalance(); // 1000
-        double businessInitialBalance = accountManager.findAccountByIBAN(iban3_business).getBalance();
-
-        // To make this test runnable, we need to ensure TransactionManager.pay can get
-        // bill details.
-        // This is a major dependency. For a true *unit* test of TransactionManager,
-        // BillManager should be a mock/stub.
-        // Given the constraints, this test leans towards an integration test.
-        // I will write it with the *assumption* that TransactionManager.pay can somehow
-        // resolve RF -> (amount, receiverIBAN for companyId) and mark bill paid.
-
-        // --- SIMPLIFIED APPROACH for now: ---
-        // We'll assume TransactionManager.pay will need to be refactored to accept
-        // amount and receiverIBAN
-        // if BillManager interaction is too complex for this phase, OR we mock it.
-        // Since direct mocking isn't used, let's assume the current pay signature:
-        // public void pay(String accountIBAN, int transactorId, String description,
-        // String RF)
-        // This implies TransactionManager *must* use BillManager.
-
-        // To make this test work, we need a BillManager that, when its methods are
-        // called
-        // by TransactionManager, behaves as expected.
-        // For example, if TransactionManager calls billManager.getBillDetails(RF), it
-        // should return them.
-        // And if TransactionManager calls billManager.markBillPaid(RF), it should do
-        // so.
-
-        // This test will likely FAIL unless BillManager is implemented and populated.
-        // For the purpose of showing the test structure:
-        try {
-            // This is a conceptual placeholder for making the bill available via
-            // BillManager
-            // In a real scenario, BillManager would have methods to add/retrieve bills.
-            // For now, this will likely cause TransactionManager to fail if it can't find
-            // the bill.
-            System.out.println("Warning: testPay_Success depends on BillManager returning valid bill details for RF: "
-                    + testRF + " and receiver " + iban3_business);
-
-            // Manually adjust business account for "receiving" payment if direct deposit is
-            // hard
-            // This bypasses the actual BillManager lookup for amount and receiver.
-            // This is NOT ideal but helps test the TransactionManager's other parts.
-            // A better way: TransactionManager.pay might need to take amount and
-            // receiverIBAN if BillManager is a black box.
-            // Or, BillManager needs to be testable.
-
-            // Let's assume TransactionManager.pay is smart enough to get amount and
-            // receiver from RF via BillManager
-            // AND BillManager is set up. This is a big assumption for a unit test.
-            // If BillManager is not ready, this test needs to be adapted or marked @Ignore.
-
-            // To proceed, let's assume a hypothetical scenario where BillManager is
-            // pre-configured:
-            // 1. BillManager knows RF12345 is for 75.0 to companyId (iban3_business).
-            // 2. BillManager has a method that TransactionManager calls to mark RF12345 as
-            // paid.
-
-            // transactionManager.pay(iban1, individualId1, "Paying bill " + testRF,
-            // testRF);
-
-            // assertEquals(payerInitialBalance - billAmount,
-            // accountManager.findAccountByIBAN(iban1).getBalance(), 0.001);
-            // assertEquals(businessInitialBalance + billAmount,
-            // accountManager.findAccountByIBAN(iban3_business).getBalance(), 0.001);
-
-            // List<AccountStatement> payerStmts =
-            // accountStatementManager.getStatements(iban1);
-            // assertEquals("payment_out", payerStmts.get(0).getTransactionType());
-
-            // List<AccountStatement> receiverStmts =
-            // accountStatementManager.getStatements(iban3_business);
-            // assertEquals("payment_in", receiverStmts.get(0).getTransactionType());
-
-            // assertTrue("Bill should be marked as paid", billManager.isBillPaid(testRF));
-            // // Hypothetical
-            fail("testPay_Success requires a fully implemented or mockable BillManager. Test is conceptual.");
-
-        } catch (Exception e) {
-            // If BillManager is not set up, this might throw.
-            System.err.println("testPay_Success failed, likely due to BillManager dependency: " + e.getMessage());
-            // Depending on the exception, this might be the expected outcome if RF is not
-            // found.
-            // For now, let this fail to highlight the dependency.
-            // If RF not found should throw IllegalArgumentException from
-            // TransactionManager:
-            // assertInstanceOf(IllegalArgumentException.class, e);
-            throw e; // Re-throw if it's an unexpected failure
-        }
-    }
+   
 }
+

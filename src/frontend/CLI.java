@@ -22,6 +22,23 @@ public class CLI {
         int choice;
         system.getUserManager().register("Individual", "abcd", "1234", "aaa", "123456789");
         system.getUserManager().register("Individual", "dcba", "1234", "bbb", "987654321");
+        
+        int individualId1 = system.getUserManager().login("abcd", "1234").getId();
+        
+        try {
+            system.getAccountManager().createPersonalAccount(individualId1, "AL", 0.1, null);
+            
+            String IBAN = system.getAccountManager().findAccountsByIndividualId(individualId1).get(0).getIBAN();
+            
+            system.getTransactionManager().deposit(IBAN, individualId1, "oxi", 10);
+            system.getTransactionManager().deposit(IBAN, individualId1, "oxi", 30);
+            system.getTransactionManager().withdraw(IBAN, individualId1, "oxi", 20);
+
+        
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         while (true) {
             System.out.println("PRESS 1 FOR LOGIN");
             System.out.println("PRESS 2 TO REGISTER");
@@ -35,6 +52,7 @@ public class CLI {
                 attemptToLogin();
             } else if (choice == 3) {
                 System.out.println("Goodbye.");
+                system.saveData();
                 break;
             } else {
                 System.out.println("Invalid choice, attempting to log in");
@@ -291,12 +309,12 @@ public class CLI {
             }
 
             // Execute withdrawal through TransactionManager
-            boolean success = system.getTransactionManager().withdraw(
-                    currentBankAccountIBAN,
-                    currentUser.getId(),
-                    "ATM Withdrawal",
-                    amount);
-
+            // boolean success = system.getTransactionManager().withdraw(
+            //         currentBankAccountIBAN,
+            //         currentUser.getId(),
+            //         "ATM Withdrawal",
+            //         amount);
+            boolean success = false;
             if (success) {
                 System.out.printf("Successfully withdrew %.2f €\n", amount);
                 System.out.printf("New balance: %.2f €\n", account.getBalance());
@@ -341,12 +359,12 @@ public class CLI {
             }
 
             // Execute deposit through TransactionManager
-            boolean success = system.getTransactionManager().deposit(
-                    currentBankAccountIBAN,
-                    currentUser.getId(),
-                    description,
-                    amount);
-
+            // boolean success = system.getTransactionManager().deposit(
+            //         currentBankAccountIBAN,
+            //         currentUser.getId(),
+            //         description,
+            //         amount);
+            boolean success = false;
             if (success) {
                 System.out.printf("Successfully deposited %.2f €\n", amount);
                 System.out.printf("New balance: %.2f €\n", account.getBalance());
@@ -410,12 +428,7 @@ public class CLI {
             String description = input.next();
 
             // Execute transfer
-            boolean success = system.getTransactionManager().transfer(
-                    currentBankAccountIBAN,
-                    currentUser.getId(),
-                    description,
-                    amount,
-                    receiverIBAN);
+            boolean success = false;
 
             // Show result
             if (success) {
@@ -650,6 +663,6 @@ public class CLI {
     }
 
     static void mainloop_old() {
-a
+
     }
 }

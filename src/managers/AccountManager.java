@@ -1,12 +1,13 @@
 package managers;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import models.accounts.BankAccount;
 import models.accounts.BusinessAccount;
 import models.accounts.PersonalAccount;
 import system.BankSystem;
-
+import interfaces.*;
 public class AccountManager extends Manager {
 
     public AccountManager(BankSystem systemRef) {
@@ -47,7 +48,7 @@ public class AccountManager extends Manager {
         // IBAN: COUNTRY CODE + 100/200 (100 gia individual) + TYXAIA 15 PSHFIA
 
         // estw epitrepontai mono ta GR, AL kai EN
-        if(!"GR".equals(countryCode) && !"AL".equals(countryCode) && !"EN".equals(countryCode)){
+        if (!"GR".equals(countryCode) && !"AL".equals(countryCode) && !"EN".equals(countryCode)) {
             throw new IllegalArgumentException("Illegal country code.");
         }
 
@@ -80,7 +81,7 @@ public class AccountManager extends Manager {
         }
         String IBAN = generateIBAN(countryCode, "100");
         PersonalAccount ba = new PersonalAccount(IBAN, ownerId, interestRate, secondaryOwnerIds);
-        System.out.println("debug: " + ba.getIBAN());
+        // System.out.println("debug: " + ba.getIBAN());
         if (!ba.getIBAN().startsWith(countryCode + "100")) {
             throw new IllegalArgumentException("IBAN should start with " + countryCode + "100 for personal.");
         }
@@ -107,16 +108,17 @@ public class AccountManager extends Manager {
             throw new IllegalArgumentException("Interest rate cannot be negative.");
         }
 
-        // dokimh gia na paroyme yparxwn bank account. an yparxei, tha petaksoyme exception (afoy hdh yparxei, apagoreyetai na dhmioyrghthei kiallo)
-        
+        // dokimh gia na paroyme yparxwn bank account. an yparxei, tha petaksoyme
+        // exception (afoy hdh yparxei, apagoreyetai na dhmioyrghthei kiallo)
+
         try {
-            findAccountByBusinessId(ownerId); // "kokkino" - den yparxei
+            BankAccount ba = findAccountByBusinessId(ownerId); // "kokkino" - den yparxei
             // an den skasei h parapanw, exw provlhma
             throw new IllegalStateException(); // "mple" - yparxei bank account
-        } catch(IllegalStateException e){
+        } catch (IllegalStateException e) {
             // an skasei, tote den yparxei thema (dld )
             throw new IllegalStateException("Yparxei to bank account");
-        } catch(Exception e){
+        } catch (Exception e) {
             // ...
         }
 
@@ -190,5 +192,15 @@ public class AccountManager extends Manager {
         }
 
         return personalAccounts;
+    }
+
+    public ArrayList<BankAccount> getAllBankAccounts(){
+        return bankAccountList;
+    }
+
+    public void saveAll(){
+        List<Storable> storableList = new ArrayList<>(bankAccountList);
+        
+        writeListToFile("data/accounts/accounts.csv", storableList);
     }
 }

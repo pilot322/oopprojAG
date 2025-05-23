@@ -30,7 +30,7 @@ public class Payment extends TwoWay {
         this.RF = RF;
         this.bill = systemRef.getBillManager().getActiveBillByRf(RF);
 
-        if (bill == null || bill.isPaid()) {
+        if (bill == null) {
             throw new RuntimeException("Bill doesn't exist or is paid!");
         }
         // me vash to RF tha prepei na vreis to amount, to reiverIBAN kai to

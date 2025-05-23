@@ -1,5 +1,7 @@
 package models.accounts;
 
+import java.time.LocalDateTime;
+
 public class BusinessAccount extends BankAccount {
     private double maintenanceFee;
 
@@ -10,6 +12,18 @@ public class BusinessAccount extends BankAccount {
 
     public double getMaintenanceFee() {
         return maintenanceFee;
+    }
+
+    @Override
+    public String marshal() {
+        return "type:BusinessAccount," + super.marshal();
+    }
+
+    @Override
+    public void unmarshal(String data) {
+        super.unmarshal(data);
+        String[] parts = data.split(",");
+        this.maintenanceFee = Double.parseDouble(parts[6].split(":")[1]);
     }
 
 }

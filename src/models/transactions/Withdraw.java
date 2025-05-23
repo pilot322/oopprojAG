@@ -28,6 +28,6 @@ public class Withdraw extends Transaction {
         AccountStatementManager accStmtManager = systemRef.getAccountStatementManager();
 
         accStmtManager.addStatement(accountIBAN, transactorId, description, amount, b.getBalance(), "withdraw",
-                accountIBAN);
+                null);
     }
 }

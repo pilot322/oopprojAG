@@ -38,4 +38,10 @@ public class BankSystem {
         return userManager;
     }
 
+    public void saveData(){
+        userManager.saveAll();
+        accountManager.saveAll();
+        accountStatementManager.saveAll();
+    }
+
 }

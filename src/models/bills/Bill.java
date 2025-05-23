@@ -11,7 +11,6 @@ public class Bill {
     private final LocalDateTime timePublished;
     private final LocalDateTime expireTime;
     private boolean active;
-    private boolean isPaid;
 
     public Bill(int id, int businessId, int customerId, String RF,
             double amount, LocalDateTime timePublished,
@@ -24,7 +23,6 @@ public class Bill {
         this.timePublished = timePublished;
         this.expireTime = expireTime;
         this.active = true;
-        this.isPaid = false;
     }
 
     public int getId() {
@@ -59,16 +57,12 @@ public class Bill {
         return active;
     }
 
-    public boolean isPaid() {
-        return isPaid;
-    }
 
     public void setActive(boolean active) {
         this.active = active;
     }
 
     public void markAsPaid() {
-        this.isPaid = true;
         this.active = false;
     }
 
@@ -83,7 +77,6 @@ public class Bill {
                 ", timePublished=" + timePublished +
                 ", expireTime=" + expireTime +
                 ", active=" + active +
-                ", isPaid=" + isPaid +
                 '}';
     }
 }
